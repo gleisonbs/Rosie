@@ -54,6 +54,23 @@ class TestChatbot(TestCase):
             "Chatbot: add_intents failed to add to intents",
         )
 
+    def test_prints_correctly(self):
+        self.assertEqual(str(self.chatbot), "{}")
+
+        self.chatbot.add_intent("test_intent1", ["test1", "test2", "test3"])
+        self.chatbot.add_intent("test_intent2", ["test4", "test5", "test6"])
+
+        expected_str = """intent:test_intent1
+ - test1
+ - test2
+ - test3
+intent:test_intent2
+ - test4
+ - test5
+ - test6
+"""
+        self.assertEqual(str(self.chatbot), expected_str)
+
     def test_can_initiate_correctly(self):
         chatbot = Chatbot("test_name")
         self.assertEqual(
