@@ -5,12 +5,8 @@ from rosie.nlp_engine import NLPEngine
 
 
 class TestChatbot(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.nlp = NLPEngine().pt
-
     def setUp(self):
-        self.chatbot = Chatbot("test")
+        self.chatbot = Chatbot(NLPEngine().pt, "test.name")
 
     def test_has_all_attributes(self):
         self.assertEqual(
@@ -22,6 +18,18 @@ class TestChatbot(TestCase):
             hasattr(self.chatbot, "name"),
             True,
             "Chatbot: no name attribute found",
+        )
+
+    def test_can_initiate_correctly(self):
+        self.assertEqual(
+            self.chatbot.name,
+            "test.name",
+            "Chatbot: name attribute initialized incorrectly",
+        )
+        self.assertEqual(
+            self.chatbot.intents,
+            [],
+            "Chatbot: intents attribute initialized incorrectly",
         )
 
     def test_has_add_intent_method(self):
@@ -62,17 +70,17 @@ class TestChatbot(TestCase):
         )
 
     def test_correctly_adds_new_intent(self):
-        intent_name = "test_intent"
+        intent_name = "test.intent"
         intent_phrases = ["test1", "test2", "test3"]
         self.assertEqual(
-            self.chatbot.intents.get(intent_name),
-            None,
+            len(self.chatbot.intents),
+            0,
             "Chatbot: intents should be empty when initialized",
         )
         self.chatbot.add_intent(intent_name, intent_phrases)
         self.assertEqual(
-            self.chatbot.intents.get(intent_name),
-            intent_phrases,
+            len(self.chatbot.intents),
+            1,
             "Chatbot: add_intents failed to add to intents",
         )
 
@@ -95,18 +103,23 @@ class TestChatbot(TestCase):
             ],
         )
 
-        token = TestChatbot.nlp("quanto custa")
-        most_similar_intent = self.chatbot.get_intent_by_token(token)
+        token = "quanto custa"
+        name, value = self.chatbot.get_intent_by_token(token)
         self.assertEqual(
-            most_similar_intent,
+            name,
             "price",
             "Chatbot: get_intent_by_token failed to return correct intent",
         )
-
-        token = TestChatbot.nlp("oi, tudo bem?")
-        most_similar_intent = self.chatbot.get_intent_by_token(token)
         self.assertEqual(
-            most_similar_intent,
+            value,
+            1,
+            "Chatbot: get_intent_by_token failed to return correct intent",
+        )
+
+        token = "oi, tudo bem?"
+        name, value = self.chatbot.get_intent_by_token(token)
+        self.assertEqual(
+            name,
             "greet",
             "Chatbot: get_intent_by_token failed to return correct intent",
         )
@@ -130,12 +143,4 @@ intent:test_intent2
             str(self.chatbot),
             expected_str,
             "Chatbot: __str__ return incorrect formatted data",
-        )
-
-    def test_can_initiate_correctly(self):
-        chatbot = Chatbot("test_name")
-        self.assertEqual(
-            chatbot.name,
-            "test_name",
-            "Chatbot: name attribute initialized incorrectly",
         )

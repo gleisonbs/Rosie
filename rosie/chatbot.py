@@ -1,32 +1,26 @@
-from rosie.nlp_engine import NLPEngine
+from rosie.intent import Intent
 
 
 class Chatbot:
-    def __init__(self, name):
+    def __init__(self, nlp_engine, name):
         self.name = name
-        self.intents = {}
-        self.nlp = NLPEngine().pt
+        self.intents = []
+        self.nlp_engine = nlp_engine
 
     def add_intent(self, name, phrases):
-        self.intents[name] = phrases
+        self.intents.append(Intent(self.nlp_engine, name, phrases))
 
     def get_intent_by_token(self, token):
-        similarities = {}
-        largest = 0
-        for intent, phrases in self.intents.items():
-            max_intent_similarity = max(
-                [token.similarity(self.nlp(p)) for p in phrases]
-            )
-            similarities[max_intent_similarity] = intent
-            largest = max(largest, max_intent_similarity)
-        return similarities[largest]
+        max_similiraty_value = 0
+        max_similiraty_name = ""
+        for intent in self.intents:
+            similarity = intent.get_similarity(token)
+            if similarity > max_similiraty_value:
+                max_similiraty_value = similarity
+                max_similiraty_name = intent.name
+        return max_similiraty_name, max_similiraty_value
 
     def __str__(self):
         if len(self.intents) == 0:
             return "{}"
-
-        response = ""
-        for intent, phrases in self.intents.items():
-            response += f"intent:{intent}\n"
-            response += "".join([f" - {phrase}\n" for phrase in phrases])
-        return response
+        return "".join([str(i) for i in self.intents])

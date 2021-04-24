@@ -30,6 +30,7 @@ repos:
     rev: 1.7.0
     hooks:
       - id: bandit
+        args: ['--skip', 'B105']
   - repo: local
     hooks:
       - id: unittest

@@ -1,10 +1,10 @@
-# import spacy
 from rosie.chatbot import Chatbot
+from rosie.nlp_engine import NLPEngine
 
-chatbot = Chatbot("Pizzaria")
-
+chatbot = Chatbot(NLPEngine().pt, "Pizzaria")
 chatbot.add_intent(
-    "price", ["qual o valor", "quanto custa", "preço", "me fala o total"]
+    "price",
+    ["qual o valor", "quanto custa", "preço", "me fala o total", "comprar"],
 )
 chatbot.add_intent(
     "greet",
@@ -20,9 +20,5 @@ chatbot.add_intent(
     ],
 )
 
-print(chatbot)
 
-# nlp = spacy.load("pt_core_news_lg")
-# question = nlp("qual o preço?")
-# for phrase in phrases:
-#     print(nlp(phrase).similarity(question))
+print(chatbot.get_intent_by_token("quero saber o preço"))
