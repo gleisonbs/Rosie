@@ -1,12 +1,26 @@
 from unittest import TestCase
 
 from rosie.chatbot import Chatbot
-from rosie.nlp_engine import NLPEngine
+
+
+class NLP:
+    def __call__(self, obj):
+        return self.Doc(obj)
+
+    class Doc:
+        def __init__(self, obj):
+            self.obj = obj
+
+        def __str__(self):
+            return self.obj
+
+        def similarity(self, dummy):
+            return 0.5
 
 
 class TestChatbot(TestCase):
     def setUp(self):
-        self.chatbot = Chatbot(NLPEngine().pt, "test.name")
+        self.chatbot = Chatbot(NLP(), "test.name")
 
     def test_has_all_attributes(self):
         self.assertEqual(
@@ -86,41 +100,40 @@ class TestChatbot(TestCase):
 
     def test_correctly_returns_most_similar_intent(self):
         self.chatbot.add_intent(
-            "price",
-            ["qual o valor", "quanto custa", "preço", "me fala o total"],
+            "test.intent.1",
+            ["test.phrase.1", "test.phrase.2"],
         )
-        self.chatbot.add_intent(
-            "greet",
-            [
-                "oi",
-                "olá",
-                "tudo bem",
-                "como vai",
-                "opa",
-                "bom dia",
-                "boa noite",
-                "boa tarde",
-            ],
-        )
+        self.chatbot.intents[0].get_similarity = lambda s: 0.5
 
-        token = "quanto custa"
+        self.chatbot.add_intent(
+            "test.intent.2",
+            ["test.phrase.3", "test.phrase.4"],
+        )
+        self.chatbot.intents[1].get_similarity = lambda s: 0.2
+
+        token = "test.intent.3"
         name, value = self.chatbot.get_intent_by_token(token)
         self.assertEqual(
             name,
-            "price",
+            "test.intent.1",
             "Chatbot: get_intent_by_token failed to return correct intent",
         )
         self.assertEqual(
             value,
-            1,
+            0.5,
             "Chatbot: get_intent_by_token failed to return correct intent",
         )
 
-        token = "oi, tudo bem?"
+        self.chatbot.intents[1].get_similarity = lambda s: 0.9
         name, value = self.chatbot.get_intent_by_token(token)
         self.assertEqual(
             name,
-            "greet",
+            "test.intent.2",
+            "Chatbot: get_intent_by_token failed to return correct intent",
+        )
+        self.assertEqual(
+            value,
+            0.9,
             "Chatbot: get_intent_by_token failed to return correct intent",
         )
 

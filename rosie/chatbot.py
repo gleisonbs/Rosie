@@ -11,14 +11,13 @@ class Chatbot:
         self.intents.append(Intent(self.nlp_engine, name, phrases))
 
     def get_intent_by_token(self, token):
-        max_similiraty_value = 0
-        max_similiraty_name = ""
+        value = 0
+        name = ""
         for intent in self.intents:
             similarity = intent.get_similarity(token)
-            if similarity > max_similiraty_value:
-                max_similiraty_value = similarity
-                max_similiraty_name = intent.name
-        return max_similiraty_name, max_similiraty_value
+            if similarity > value:
+                value, name = similarity, intent.name
+        return name, value
 
     def __str__(self):
         if len(self.intents) == 0:

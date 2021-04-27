@@ -1,12 +1,26 @@
 from unittest import TestCase
 
 from rosie.intent import Intent
-from rosie.nlp_engine import NLPEngine
+
+
+class NLP:
+    def __call__(self, obj):
+        return self.Doc(obj)
+
+    class Doc:
+        def __init__(self, obj):
+            self.obj = obj
+
+        def __str__(self):
+            return self.obj
+
+        def similarity(self, dummy):
+            return 0.5
 
 
 class TestIntent(TestCase):
     def setUp(self):
-        self.intent = Intent(NLPEngine().pt, "test.intent")
+        self.intent = Intent(NLP(), "test.intent")
 
     def tearDown(self):
         self.intent = None
@@ -102,7 +116,7 @@ class TestIntent(TestCase):
         self.intent.add_phrase("me fala o total")
 
         similarity = self.intent.get_similarity("qual o valor")
-        self.assertEqual(similarity, 1)
+        self.assertNotEqual(similarity, 0)
 
         similarity = self.intent.get_similarity("qual o preço")
         self.assertGreater(similarity, 0)
