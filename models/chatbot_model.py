@@ -1,4 +1,4 @@
-from api.db import db
+from config.db import db
 
 
 class Chatbot(db.Model):

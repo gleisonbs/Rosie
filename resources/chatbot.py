@@ -1,13 +1,13 @@
 from flask import request
 from flask_restful import Resource
 
-from api.db import db
-from api.serializers.chatbot_serializer import ChatbotSchema
+from config.db import db
+from serializers.chatbot_serializer import ChatbotSchema
 
 
 class Chatbot(Resource):
     def get(self):
-        ...
+        return "Hello", 200
 
     def post(self):
         cs = ChatbotSchema()

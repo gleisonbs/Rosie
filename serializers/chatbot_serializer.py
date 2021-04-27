@@ -1,5 +1,5 @@
-from api.ma import ma
-from api.models.chatbot_model import Chatbot
+from config.ma import ma
+from models.chatbot_model import Chatbot
 
 
 class ChatbotSchema(ma.SQLAlchemyAutoSchema):
