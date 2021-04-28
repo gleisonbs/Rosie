@@ -1,19 +1,21 @@
-from flask import request
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 
-from config.db import db
-from serializers.chatbot_serializer import ChatbotSchema
+from models.chatbot_model import ChatbotModel
 
 
 class Chatbot(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument(
+        "name", type=str, required=True, help="This field is mandatory"
+    )
+
     def get(self):
-        return "Hello", 200
+        chatbots = ChatbotModel.get_all()
+        print(chatbots)
+        return {"chatbots": [c.json() for c in chatbots]}, 200
 
     def post(self):
-        cs = ChatbotSchema()
-        chatbot = cs.load(request.json)
-        db.session.add(chatbot)
-        db.session.commit()
-        response = cs.jsonify(chatbot)
-        response.status_code = 201
-        return response
+        data = Chatbot.parser.parse_args()
+        chatbot = ChatbotModel(**data)
+        chatbot.save()
+        return chatbot.json(), 201

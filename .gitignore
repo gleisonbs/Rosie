@@ -139,6 +139,7 @@ cython_debug/
 
 # Migration folder
 api/migrations
+migrations
 
 # SQLite file
 *.db
