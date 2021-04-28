@@ -1,0 +1,91 @@
+---
+openapi: 3.0.0
+info:
+  title: RosieAPI
+  description: API documentation for the Rosie chatbot framework
+  contact:
+    name: Gleison Batista
+    url: https://resume-front.web.app/
+    email: gleisonbs@gmail.com
+  version: "0.1"
+servers:
+- url: https://virtserver.swaggerhub.com/Gleison/RosieAPI/0.1
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: Chatbot
+paths:
+  /chatbot:
+    get:
+      tags:
+      - Chatbot
+      description: creates a new chatbot
+      operationId: Create new Chatbot
+      responses:
+        "200":
+          description: Chatbot created succesfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chatbot'
+    post:
+      tags:
+      - Chatbot
+      description: creates a new chatbot
+      operationId: Get all Chatbots
+      parameters:
+      - name: name
+        in: query
+        description: the name of your chatbot
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: my_bot
+      responses:
+        "201":
+          description: Chatbot created succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chatbot'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+components:
+  schemas:
+    Chatbot:
+      type: object
+      properties:
+        name:
+          type: string
+          example: my_bot
+        intents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Intent'
+      description: Schema for chatbot
+    Intent:
+      type: object
+      properties:
+        name:
+          type: string
+          example: my_intent
+        phrases:
+          type: array
+          items:
+            type: string
+            example: my intent phrase
+      description: Schema for Intent
+    "400":
+      type: object
+      properties:
+        error:
+          type: string
+          example: Bad Request
+      description: Schema for 400
