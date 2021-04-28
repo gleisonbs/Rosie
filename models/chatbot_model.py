@@ -2,16 +2,22 @@ from config.db import db
 
 
 class ChatbotModel(db.Model):
-    __tablename__ = "chatbot"
+    __tablename__ = "chatbots"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
+
+    intents = db.relationship("IntentModel", lazy="dynamic")
 
     def __init__(self, name):
         self.name = name
 
     def json(self):
-        return {"name": self.name}
+        return {
+            "id": self.id,
+            "name": self.name,
+            "intents": [i.json() for i in self.intents.all()],
+        }
 
     @classmethod
     def get_all(cls):

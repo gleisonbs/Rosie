@@ -4,11 +4,6 @@ from models.chatbot_model import ChatbotModel
 
 
 class Chatbot(Resource):
-    parser = reqparse.RequestParser()
-    parser.add_argument(
-        "name", type=str, required=True, help="This field is mandatory"
-    )
-
     def get(self, name):
         chatbot = ChatbotModel.get_by_name(name)
         return chatbot.json(), 200
@@ -26,6 +21,6 @@ class ChatbotList(Resource):
 
     def post(self):
         data = ChatbotList.parser.parse_args()
-        chatbot = ChatbotModel(**data)
+        chatbot = ChatbotModel(name=data["name"])
         chatbot.save()
         return chatbot.json(), 201
