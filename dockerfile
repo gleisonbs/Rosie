@@ -1,11 +1,17 @@
-FROM ubuntu:20.04
-
-RUN apt-get update -y
-RUN apt-get install -y python3-pip python-dev build-essential
-
-WORKDIR /app
+FROM python:3.9.2-slim
 
 ENV FLASK_APP=app.py
+WORKDIR /app
+
+RUN apt-get clean \
+  && apt-get -y update
+
+RUN apt-get -y install nginx \
+  && apt-get -y install python3-dev \
+  && apt-get -y install build-essential
+
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt --src /usr/local/src
 
 COPY config config
 COPY models models
@@ -13,15 +19,15 @@ COPY resources resources
 COPY rosie rosie
 COPY serializers serializers
 
-COPY requirements.txt .
 COPY app.py .
 COPY uwsgi.ini .
-
-RUN pip3 install -r requirements.txt
+COPY nginx.conf /etc/nginx
+COPY start.sh .
 
 RUN flask db init
 RUN flask db migrate -m "Initial migration."
 RUN flask db upgrade
 RUN chown -R www-data:www-data /app
 
-CMD ["uwsgi", "--ini", "uwsgi.ini"]
+RUN chmod +x ./start.sh
+CMD ["./start.sh"]
