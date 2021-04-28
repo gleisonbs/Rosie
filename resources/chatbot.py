@@ -9,13 +9,23 @@ class Chatbot(Resource):
         "name", type=str, required=True, help="This field is mandatory"
     )
 
-    def get(self):
-        chatbots = ChatbotModel.get_all()
-        print(chatbots)
-        return {"chatbots": [c.json() for c in chatbots]}, 200
+    def get(self, name):
+        chatbot = ChatbotModel.get_by_name(name)
+        return chatbot.json(), 200
 
     def post(self):
         data = Chatbot.parser.parse_args()
         chatbot = ChatbotModel(**data)
         chatbot.save()
         return chatbot.json(), 201
+
+
+class ChatbotList(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument(
+        "name", type=str, required=True, help="This field is mandatory"
+    )
+
+    def get(self):
+        chatbots = ChatbotModel.get_all()
+        return {"chatbots": [c.json() for c in chatbots]}, 200
