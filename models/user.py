@@ -10,7 +10,7 @@ class UserModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
-    password = db.Column(db.String(80), unique=True)
+    password = db.Column(db.String(80))
 
     def __init__(self, username: str, password: str):
         self.username = username
@@ -31,6 +31,6 @@ class UserModel(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def delete_from_db(self):
+    def delete_from_db(self) -> None:
         db.session.delete(self)
         db.session.commit()
