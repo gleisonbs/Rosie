@@ -7,6 +7,7 @@ name = "pypi"
 flask = "*"
 flask-restful = "*"
 flask-migrate = "*"
+flask-jwt-extended = "*"
 
 [dev-packages]
 pre-commit = "*"
