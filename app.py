@@ -25,8 +25,8 @@ def create_tables():
 
 
 api = Api(app)
-api.add_resource(ChatbotList, "/chatbot")
-api.add_resource(Chatbot, "/chatbot/<string:name>")
+api.add_resource(ChatbotList, "/user/<int:user_id>/chatbot")
+api.add_resource(Chatbot, "/user/<int:user_id>/chatbot/<string:name>")
 
 api.add_resource(IntentList, "/chatbot/<int:chatbot_id>/intent")
 

@@ -12,6 +12,8 @@ class UserModel(db.Model):
     username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(80))
 
+    chatbots = db.relationship("ChatbotModel", lazy="dynamic")
+
     def __init__(self, username: str, password: str):
         self.username = username
         self.password = password
