@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 flask = "*"
 flask-restful = "*"
-flask-migrate = "*"
 flask-jwt-extended = "*"
 
 [dev-packages]
