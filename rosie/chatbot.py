@@ -8,11 +8,14 @@ class Chatbot:
         self.nlp_engine = nlp_engine
 
     def add_intent(self, name, phrases):
-        self.intents.append(Intent(self.nlp_engine, name, phrases))
+        self.intents.append(
+            Intent(self.nlp_engine, name, [p.lower() for p in phrases])
+        )
 
     def get_intent_by_token(self, token):
         value = 0
         name = ""
+        token = token.lower()
         for intent in self.intents:
             similarity = intent.get_similarity(token)
             if similarity > value:
