@@ -12,7 +12,14 @@ chatbot = Chatbot(NLPEngine().pt, "Pizzaria")
 # Add the price intent
 chatbot.add_intent(
     "price",
-    ["qual o valor", "quanto custa", "preço", "me fala o total", "comprar"],
+    [
+        "qual o valor",
+        "quanto custa",
+        "preço",
+        "me fala o total",
+        "comprar",
+        "qto tá a pizza",
+    ],
 )
 
 # Add the greetings intent
@@ -43,4 +50,11 @@ chatbot.add_intent(
 )
 
 # Try to guess the intent by the phrase
-print(chatbot.get_intent_by_token("tem coca de 2l"))
+phrase1 = "tem coca de 2l"
+print(phrase1, "-", chatbot.get_intent_by_token(phrase1))
+
+phrase2 = "qto tá a calabresa?"
+print(phrase2, "-", chatbot.get_intent_by_token(phrase2))
+
+phrase3 = "Boa noite"
+print(phrase3, "-", chatbot.get_intent_by_token(phrase3))
